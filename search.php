@@ -52,8 +52,27 @@ check_login();
 <div class="container-fluid container-fullw bg-white">
 <div class="row">
 <div class="col-md-12">
-<h5 class="over-title margin-bottom-15">Manage <span class="text-bold">Patients</span></h5>
-	
+	<form role="form" method="post" name="search">
+
+<div class="form-group">
+<label for="doctorname">
+Search by Name/Mobile No.
+</label>
+<input type="text" name="searchdata" id="searchdata" class="form-control" value="" required='true'>
+</div>
+
+<button type="submit" name="search" id="submit" class="btn btn-o btn-primary">
+Search
+</button>
+</form>	
+<?php
+if(isset($_POST['search']))
+{ 
+
+$sdata=$_POST['searchdata'];
+  ?>
+<h4 align="center">Result against "<?php echo $sdata;?>" keyword </h4>
+
 <table class="table table-hover" id="sample-table-1">
 <thead>
 <tr>
@@ -68,8 +87,9 @@ check_login();
 </thead>
 <tbody>
 <?php
-$docid=$_SESSION['id'];
-$sql=mysqli_query($con,"select * from tblpatient where Docid='$docid' ");
+$sql=mysqli_query($con,"select * from tblpatient where PatientName like '%$sdata%'|| PatientContno like '%$sdata%'");
+$num=mysqli_num_rows($sql);
+if($num>0){
 $cnt=1;
 while($row=mysqli_fetch_array($sql))
 {
@@ -90,7 +110,13 @@ while($row=mysqli_fetch_array($sql))
 </tr>
 <?php 
 $cnt=$cnt+1;
- }?></tbody>
+} } else { ?>
+  <tr>
+    <td colspan="8"> No record found against this search</td>
+
+  </tr>
+   
+<?php }} ?></tbody>
 </table>
 </div>
 </div>
